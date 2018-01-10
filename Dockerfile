@@ -127,9 +127,6 @@ RUN apt-get install -y libpcre3 libpcre3-dev  --no-install-recommends \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && :\
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb \
-    && :\
     && apt-get install -y libmagickwand-dev --no-install-recommends \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
