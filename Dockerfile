@@ -109,7 +109,8 @@ RUN apt-get update \
     #&& docker-php-ext-install ldap \
 
 # Composer
-RUN curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/bin/ --filename=composer
+# RUN curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/bin/ --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install extension using pecl
 # Notice: if pecl install get error
