@@ -70,7 +70,7 @@ RUN apt-get update \
     && apt-get install -y libpspell-dev aspell-en --no-install-recommends \
     && docker-php-ext-install pspell \
     && :\
-    && apt-get install -y libc-client-dev --no-install-recommends \
+    && apt-get install -y libssl-dev libc-client-dev libkrb5-dev --no-install-recommends \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap
     #&& docker-php-ext-install pdo_firebird \
