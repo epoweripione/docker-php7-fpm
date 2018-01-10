@@ -120,7 +120,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ 
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
 
-RUN pecl install oauth \
+RUN apt-get install -y libpcre3 libpcre3-dev  --no-install-recommends \
+    && pecl install oauth \
     && docker-php-ext-enable oauth \
     && :\
     && pecl install redis \
