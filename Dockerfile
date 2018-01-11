@@ -3,7 +3,7 @@ FROM php:fpm
 LABEL Maintainer="Ansley Leung" \
       Description="latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="1.0"
+      Version="1.1"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -109,16 +109,16 @@ RUN apt-get update \
     #&& docker-php-ext-install ldap \
 
 # Composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_HOME /usr/local/share/composer
+
+RUN mkdir -p /usr/local/share/composer
 # RUN curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/bin/ --filename=composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install Prestissimo - composer parallel install plugin
 # https://github.com/hirak/prestissimo
-# ENV COMPOSER_ALLOW_SUPERUSER 1
-# ENV COMPOSER_NO_INTERACTION 1
-# ENV COMPOSER_HOME /usr/local/share/composer
-# RUN mkdir -p /usr/local/share/composer \
-#     && composer global require hirak/prestissimo
+RUN composer global require "hirak/prestissimo:^0.3.7"
 
 # Install extension using pecl
 # Notice: if pecl install get error
@@ -131,9 +131,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ 
 RUN apt-get install -y libpcre3 libpcre3-dev --no-install-recommends \
     && pecl install oauth \
     && docker-php-ext-enable oauth \
-    && :\
-    && pecl install redis \
-    && docker-php-ext-enable redis \
     && :\
     && apt-get install -y libmagickwand-dev --no-install-recommends \
     && pecl install imagick \
