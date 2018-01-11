@@ -112,6 +112,14 @@ RUN apt-get update \
 # RUN curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/bin/ --filename=composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
+# Install Prestissimo - composer parallel install plugin
+# https://github.com/hirak/prestissimo
+# ENV COMPOSER_ALLOW_SUPERUSER 1
+# ENV COMPOSER_NO_INTERACTION 1
+# ENV COMPOSER_HOME /usr/local/share/composer
+# RUN mkdir -p /usr/local/share/composer \
+#     && composer global require hirak/prestissimo
+
 # Install extension using pecl
 # Notice: if pecl install get error
 #    No releases available for package "pecl.php.net/xxx"
@@ -120,7 +128,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ 
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
 
-RUN apt-get install -y libpcre3 libpcre3-dev  --no-install-recommends \
+RUN apt-get install -y libpcre3 libpcre3-dev --no-install-recommends \
     && pecl install oauth \
     && docker-php-ext-enable oauth \
     && :\
@@ -135,7 +143,13 @@ RUN apt-get install -y libpcre3 libpcre3-dev  --no-install-recommends \
     && pecl install memcached \
     && docker-php-ext-enable memcached
 
-RUN pecl install xdebug-2.6.0alpha1 \
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb \
+    && :\
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && :\
+    && pecl install xdebug-2.6.0alpha1 \
     && docker-php-ext-enable xdebug
 
 # some clean job
