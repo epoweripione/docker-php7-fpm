@@ -3,7 +3,7 @@ FROM php:fpm
 LABEL Maintainer="Ansley Leung" \
       Description="latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="2.0"
+      Version="2.1"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -83,7 +83,7 @@ RUN composer global require "hirak/prestissimo:^0.3.7"
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
 
-RUN pecl install oauth imagick memcached redis mongodb xdebug-2.6.0alpha1 \
+RUN pecl install oauth imagick memcached redis mongodb xdebug \
     && docker-php-ext-enable oauth imagick memcached redis mongodb xdebug
 
 # some clean job
