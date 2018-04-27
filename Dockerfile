@@ -1,4 +1,4 @@
-FROM php:7-fpm
+FROM php:7.2.5-fpm
 
 LABEL Maintainer="Ansley Leung" \
       Description="latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
