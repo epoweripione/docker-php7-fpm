@@ -3,7 +3,7 @@ FROM php:7-fpm
 LABEL Maintainer="Ansley Leung" \
       Description="latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.4"
+      Version="7.2.5"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
