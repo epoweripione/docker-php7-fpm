@@ -1,7 +1,7 @@
 FROM php:7.2.5-fpm
 
 LABEL Maintainer="Ansley Leung" \
-      Description="latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
+      Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
       Version="7.2.5"
 
@@ -61,6 +61,7 @@ RUN { \
 		echo 'opcache.revalidate_freq=60'; \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
+		echo 'opcache.file_cache=/tmp'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Composer
