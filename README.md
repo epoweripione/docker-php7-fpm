@@ -8,4 +8,4 @@ Use `docker-php-ext-install extension_name` `pecl` to install Extensions.
 
 `Composer` also installed.
 
-More info: https://hub.docker.com/_/php/
+More info please visit: https://hub.docker.com/_/php/
