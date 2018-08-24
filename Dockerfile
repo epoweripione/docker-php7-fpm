@@ -1,9 +1,9 @@
-FROM php:7.2.8-fpm
+FROM php:7.2.9-fpm
 
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.8"
+      Version="7.2.9"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -87,9 +87,46 @@ RUN composer global require "hirak/prestissimo:^0.3.7"
 RUN pecl install oauth imagick memcached redis mongodb xdebug \
     && docker-php-ext-enable oauth imagick memcached redis mongodb xdebug
 
+# nghttp2( for swoole )
+# https://github.com/nghttp2/nghttp2
+RUN apt install -y nghttp2 libnghttp2-dev --no-install-recommends
+
+# hiredis( for swoole )
+# https://github.com/redis/hiredis
+RUN mkdir -p ~/build && \
+    cd ~/build && mkdir -p ./tmp && \
+    rm -rf ./hiredis && \
+    curl -o ./tmp/hiredis.tar.gz https://github.com/redis/hiredis/archive/master.tar.gz -L && \
+    tar zxvf ./tmp/hiredis.tar.gz && \
+    mv hiredis* hiredis && \
+    cd hiredis && \
+    make -j && make install && ldconfig
+
+# swoole
+# https://github.com/swoole/swoole-src
+RUN mkdir -p ~/build && \
+    cd ~/build && mkdir -p ./tmp && \
+    rm -rf ./swoole-src && \
+    curl -o ./tmp/swoole.tar.gz https://github.com/swoole/swoole-src/archive/master.tar.gz -L && \
+    tar zxvf ./tmp/swoole.tar.gz && \
+    mv swoole-src* swoole-src && \
+    cd swoole-src && \
+    phpize && \
+    ./configure \
+    --enable-coroutine \
+    --enable-openssl  \
+    --enable-http2  \
+    --enable-async-redis \
+    --enable-sockets \
+    --enable-mysqlnd \
+    --enable-coroutine-postgresql && \
+    make clean && make && make install && \
+    docker-php-ext-enable swoole
+
 # some clean job
 RUN apt-get clean \
     && apt-get autoclean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/*\
+    && rm -rf ~/build
