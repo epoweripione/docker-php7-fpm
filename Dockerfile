@@ -95,8 +95,32 @@ RUN mkdir -p /usr/local/share/composer && \
 RUN pecl install imagick memcached mongodb redis oauth xdebug && \
     docker-php-ext-enable imagick memcached mongodb redis oauth xdebug
 
-
+# swoole
+# https://github.com/swoole/swoole-src
+# hiredis( for swoole )
+# https://github.com/redis/hiredis
+RUN mkdir -p /tmp/downloads && cd /tmp && \
+    curl -o ./downloads/hiredis.tar.gz https://github.com/redis/hiredis/archive/master.tar.gz -L && \
+    tar zxvf ./downloads/hiredis.tar.gz && \
+    mv hiredis* hiredis && cd hiredis && \
+    make -j && make install && ldconfig && \
+    cd /tmp && \
+    curl -o ./downloads/swoole.tar.gz https://github.com/swoole/swoole-src/archive/master.tar.gz -L && \
+    tar zxvf ./downloads/swoole.tar.gz && \
+    mv swoole-src* swoole-src && cd swoole-src && \
+    phpize && \
+    ./configure \
+        --enable-coroutine \
+        --enable-openssl  \
+        --enable-http2  \
+        --enable-async-redis \
+        --enable-sockets \
+        --enable-mysqlnd \
+        --enable-coroutine-postgresql && \
+    make clean && make && make install && \
+    docker-php-ext-enable swoole && \
+    rm -rf /tmp/*
 
 # some clean job
-RUN apt-get clean && apt-get autoclean && apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# RUN apt-get clean && apt-get autoclean && apt-get autoremove && \
+#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
