@@ -7,17 +7,7 @@ LABEL Maintainer="Ansley Leung" \
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Uncomment if you want use APT mirror, modify the mirror address to which you favor
-# RUN sed -i 's|deb.debian.org|mirrors.ustc.edu.cn|g' /etc/apt/sources.list \
-#     && sed -i 's|security.debian.org|mirrors.ustc.edu.cn/debian-security/|g' /etc/apt/sources.list
-
 RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https dialog --no-install-recommends
-
-# Uncommentif you want use HTTPS mirror, modify the mirror address to which you favor
-# RUN sed -i 's|http://mirrors.ustc.edu.cn|https://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
-
-RUN apt-get update && \
     apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libicu-dev \
             libxml2-dev libxslt-dev libbz2-dev libpspell-dev aspell-en \
             curl libcurl3 libcurl4-openssl-dev libssl-dev libc-client-dev libkrb5-dev \
@@ -67,7 +57,7 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
 		echo 'opcache.file_cache=/tmp'; \
-	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # remove PHP version from the X-Powered-By HTTP header
 # test: curl -I -H "Accept-Encoding: gzip, deflate" https://www.yourdomain.com
@@ -91,9 +81,9 @@ RUN mkdir -p /usr/local/share/composer && \
 #    Package "xxx" does not have REST xml available
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
-
 RUN pecl install imagick memcached mongodb redis oauth xdebug && \
-    docker-php-ext-enable imagick memcached mongodb redis oauth xdebug
+    docker-php-ext-enable imagick memcached mongodb redis oauth xdebug && \
+    rm -rf /tmp/*
 
 # swoole
 # https://github.com/swoole/swoole-src
