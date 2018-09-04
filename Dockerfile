@@ -49,6 +49,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 
 # set recommended opcache settings
 # https://secure.php.net/manual/en/opcache.installation.php
+# remove PHP version from the X-Powered-By HTTP header
+# test: curl -I -H "Accept-Encoding: gzip, deflate" https://www.yourdomain.com
 RUN { \
 		echo 'opcache.memory_consumption=128'; \
 		echo 'opcache.interned_strings_buffer=8'; \
@@ -57,21 +59,18 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
 		echo 'opcache.file_cache=/tmp'; \
-    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
-# remove PHP version from the X-Powered-By HTTP header
-# test: curl -I -H "Accept-Encoding: gzip, deflate" https://www.yourdomain.com
-RUN echo 'expose_php = off' > /usr/local/etc/php/conf.d/hide-header-version.ini
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini && \
+    echo 'expose_php = off' > /usr/local/etc/php/conf.d/hide-header-version.ini
 
 # Composer
 # Prestissimo - composer parallel install plugin
 # https://github.com/hirak/prestissimo
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /usr/local/share/composer
-
 RUN mkdir -p /usr/local/share/composer && \
+    export COMPOSER_ALLOW_SUPERUSER=1 && \
+    export COMPOSER_HOME=/usr/local/share/composer && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer && \
-    composer g require "hirak/prestissimo:^0.3.7"
+    composer g require "hirak/prestissimo:^0.3.7" && \
+    composer clearcache
 # wget https://dl.laravel-china.org/composer.phar -O /usr/local/bin/composer && chmod a+x /usr/local/bin/composer
 
 # Install extension using pecl
