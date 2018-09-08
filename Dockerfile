@@ -110,6 +110,16 @@ RUN mkdir -p /tmp/downloads && cd /tmp && \
     docker-php-ext-enable swoole && \
     rm -rf /tmp/*
 
+# PDFlib
+RUN cd /tmp && \
+    export PHP_EXT_DIR=$(php-config --extension-dir) && \
+    curl -o pdflib.tar.gz https://www.pdflib.com/binaries/PDFlib/912/PDFlib-9.1.2p1-Linux-x86_64-php.tar.gz -L && \
+    tar -xvf pdflib.tar.gz && \
+    mv PDFlib-* pdflib && cd pdflib && \
+    cp bind/php/php-720-nts/php_pdflib.so $PHP_EXT_DIR && \
+    docker-php-ext-enable php_pdflib && \
+    rm -rf /tmp/*
+
 # some clean job
 # RUN apt-get clean && apt-get autoclean && apt-get autoremove && \
 #     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
