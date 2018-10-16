@@ -1,9 +1,9 @@
-FROM php:7.2.10-fpm
+FROM php:7.2.11-fpm
 
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.10"
+      Version="7.2.11"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -69,7 +69,7 @@ RUN mkdir -p /usr/local/share/composer && \
     export COMPOSER_ALLOW_SUPERUSER=1 && \
     export COMPOSER_HOME=/usr/local/share/composer && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer && \
-    composer g require "hirak/prestissimo:^0.3.7" && \
+    composer g require "hirak/prestissimo" && \
     composer clearcache
 # wget https://dl.laravel-china.org/composer.phar -O /usr/local/bin/composer && chmod a+x /usr/local/bin/composer
 
