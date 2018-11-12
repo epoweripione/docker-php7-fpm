@@ -1,9 +1,9 @@
-FROM php:7.2.11-fpm
+FROM php:7.2.12-fpm
 
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.11"
+      Version="7.2.12"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
