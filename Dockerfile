@@ -3,11 +3,18 @@ FROM php:7.2-fpm
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.12"
+      Version="7.2.13"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get upgrade -y && \
+ENV TZ=Asia/Shanghai
+RUN set -ex && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libicu-dev \
             libxml2-dev libxslt-dev libbz2-dev libpspell-dev aspell-en \
             curl libcurl3 libcurl4-openssl-dev libssl-dev libc-client-dev libkrb5-dev \
@@ -24,7 +31,8 @@ RUN apt-get update && apt-get upgrade -y && \
 # 1. Mcrypt was DEPRECATED in PHP 7.1.0, and REMOVED in PHP 7.2.0.
 # 2. opcache requires PHP version >= 7.0.0.
 # 3. Line `&& :\` is just for better reading and do nothing.
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+RUN set -ex && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install gd && \
     : && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
@@ -65,7 +73,8 @@ RUN { \
 # Composer
 # Prestissimo - composer parallel install plugin
 # https://github.com/hirak/prestissimo
-RUN mkdir -p /usr/local/share/composer && \
+RUN set -ex && \
+    mkdir -p /usr/local/share/composer && \
     export COMPOSER_ALLOW_SUPERUSER=1 && \
     export COMPOSER_HOME=/usr/local/share/composer && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer && \
@@ -80,7 +89,8 @@ RUN mkdir -p /usr/local/share/composer && \
 #    Package "xxx" does not have REST xml available
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
-RUN pecl install imagick memcached mongodb redis oauth xdebug && \
+RUN set -ex && \
+    pecl install imagick memcached mongodb redis oauth xdebug && \
     docker-php-ext-enable imagick memcached mongodb redis oauth xdebug && \
     rm -rf /tmp/*
 
@@ -88,7 +98,8 @@ RUN pecl install imagick memcached mongodb redis oauth xdebug && \
 # https://github.com/swoole/swoole-src
 # hiredis( for swoole )
 # https://github.com/redis/hiredis
-RUN mkdir -p /tmp/downloads && cd /tmp && \
+RUN set -ex && \
+    mkdir -p /tmp/downloads && cd /tmp && \
     curl -o ./downloads/hiredis.tar.gz https://github.com/redis/hiredis/archive/master.tar.gz -L && \
     tar zxvf ./downloads/hiredis.tar.gz && \
     mv hiredis* hiredis && cd hiredis && \
@@ -111,7 +122,8 @@ RUN mkdir -p /tmp/downloads && cd /tmp && \
     rm -rf /tmp/*
 
 # PDFlib
-RUN cd /tmp && \
+RUN set -ex && \
+    cd /tmp && \
     export PHP_EXT_DIR=$(php-config --extension-dir) && \
     curl -o pdflib.tar.gz https://www.pdflib.com/binaries/PDFlib/912/PDFlib-9.1.2p1-Linux-x86_64-php.tar.gz -L && \
     tar -xvf pdflib.tar.gz && \
