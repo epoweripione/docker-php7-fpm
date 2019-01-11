@@ -1,9 +1,9 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.14"
+      Version="7.3.1"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -124,15 +124,16 @@ RUN set -ex && \
     rm -rf /tmp/*
 
 # PDFlib
-RUN set -ex && \
-    cd /tmp && \
-    export PHP_EXT_DIR=$(php-config --extension-dir) && \
-    curl -o pdflib.tar.gz https://www.pdflib.com/binaries/PDFlib/912/PDFlib-9.1.2p1-Linux-x86_64-php.tar.gz -L && \
-    tar -xvf pdflib.tar.gz && \
-    mv PDFlib-* pdflib && cd pdflib && \
-    cp bind/php/php-720-nts/php_pdflib.so $PHP_EXT_DIR && \
-    docker-php-ext-enable php_pdflib && \
-    rm -rf /tmp/*
+# https://www.pdflib.com/download/pdflib-product-family/
+# RUN set -ex && \
+#     cd /tmp && \
+#     export PHP_EXT_DIR=$(php-config --extension-dir) && \
+#     curl -o pdflib.tar.gz https://www.pdflib.com/binaries/PDFlib/912/PDFlib-9.1.2p1-Linux-x86_64-php.tar.gz -L && \
+#     tar -xvf pdflib.tar.gz && \
+#     mv PDFlib-* pdflib && cd pdflib && \
+#     cp bind/php/php-730-nts/php_pdflib.so $PHP_EXT_DIR && \
+#     docker-php-ext-enable php_pdflib && \
+#     rm -rf /tmp/*
 
 # some clean job
 # RUN apt-get clean && apt-get autoclean && apt-get autoremove && \
