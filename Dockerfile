@@ -90,8 +90,8 @@ RUN set -ex && \
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
 RUN set -ex && \
-    pecl install imagick memcached mongodb oauth psr redis xdebug-beta && \
-    docker-php-ext-enable imagick memcached mongodb oauth psr redis xdebug && \
+    pecl install imagick memcached mongodb oauth psr redis && \
+    docker-php-ext-enable imagick memcached mongodb oauth psr redis && \
     rm -rf /tmp/*
 
 # swoole
