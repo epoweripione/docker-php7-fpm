@@ -3,7 +3,7 @@ FROM php:7.2-fpm
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.2.15"
+      Version="7.2.16"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -124,10 +124,11 @@ RUN set -ex && \
     rm -rf /tmp/*
 
 # PDFlib
+# https://www.pdflib.com/download/pdflib-product-family/
 RUN set -ex && \
     cd /tmp && \
     export PHP_EXT_DIR=$(php-config --extension-dir) && \
-    curl -o pdflib.tar.gz https://www.pdflib.com/binaries/PDFlib/912/PDFlib-9.1.2p1-Linux-x86_64-php.tar.gz -L && \
+    curl -o pdflib.tar.gz https://www.pdflib.com/binaries/PDFlib/920/PDFlib-9.2.0-Linux-x86_64-php.tar.gz -L && \
     tar -xvf pdflib.tar.gz && \
     mv PDFlib-* pdflib && cd pdflib && \
     cp bind/php/php-720-nts/php_pdflib.so $PHP_EXT_DIR && \
