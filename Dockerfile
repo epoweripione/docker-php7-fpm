@@ -3,7 +3,7 @@ FROM php:7.3-fpm
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
       License="MIT License" \
-      Version="7.3.2"
+      Version="7.3.3"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -91,7 +91,7 @@ RUN set -ex && \
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
 RUN set -ex && \
-    pecl install imagick memcached mongodb oauth psr redis xdebug-beta && \
+    pecl install imagick memcached mongodb oauth psr redis xdebug && \
     docker-php-ext-enable imagick memcached mongodb oauth psr redis xdebug && \
     rm -rf /tmp/*
 
