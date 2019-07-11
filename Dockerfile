@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:7-fpm
 
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
@@ -91,37 +91,24 @@ RUN set -ex && \
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 # RUN pear config-set http_proxy http://192.168.0.100:8118
 RUN set -ex && \
-    pecl install imagick memcached mongodb oauth psr redis xdebug && \
-    docker-php-ext-enable imagick memcached mongodb oauth psr redis xdebug && \
+    pecl install imagick memcached mongodb oauth psr redis swoole xdebug && \
+    docker-php-ext-enable imagick memcached mongodb oauth psr redis swoole xdebug && \
     rm -rf /tmp/*
 
-# swoole
-# https://github.com/swoole/swoole-src
-# hiredis( for swoole )
-# https://github.com/redis/hiredis
+# swoole postgresql
+# https://github.com/swoole/ext-postgresql
 RUN set -ex && \
     mkdir -p /tmp/downloads && \
     : && \
     cd /tmp && \
-    curl -o ./downloads/hiredis.tar.gz https://github.com/redis/hiredis/archive/master.tar.gz -L && \
-    tar zxvf ./downloads/hiredis.tar.gz && \
-    mv hiredis* hiredis && cd hiredis && \
-    make -j && make install && ldconfig && \
-    : && \
-    cd /tmp && \
-    curl -o ./downloads/swoole.tar.gz https://github.com/swoole/swoole-src/archive/master.tar.gz -L && \
-    tar zxvf ./downloads/swoole.tar.gz && \
-    mv swoole-src* swoole-src && cd swoole-src && \
+    curl -o ./downloads/ext-postgresql.tar.gz https://github.com/swoole/ext-postgresql/archive/master.tar.gz -L && \
+    tar zxvf ./downloads/ext-postgresql.tar.gz && \
+    mv ext-postgresql* ext-postgresql && cd ext-postgresql && \
     phpize && \
-    ./configure \
-        --enable-openssl \
-        --enable-http2 \
-        --enable-async-redis \
-        --enable-sockets \
-        --enable-mysqlnd \
-        --enable-coroutine-postgresql && \
-    make clean && make && make install && \
-    docker-php-ext-enable swoole && \
+    ./configure && \
+    make && make install && \
+    docker-php-ext-enable swoole_postgresql && \
+    : && \
     rm -rf /tmp/*
 
 # PDFlib
