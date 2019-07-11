@@ -95,22 +95,6 @@ RUN set -ex && \
     docker-php-ext-enable imagick memcached mongodb oauth psr redis swoole xdebug && \
     rm -rf /tmp/*
 
-# swoole postgresql
-# https://github.com/swoole/ext-postgresql
-RUN set -ex && \
-    mkdir -p /tmp/downloads && \
-    : && \
-    cd /tmp && \
-    curl -o ./downloads/ext-postgresql.tar.gz https://github.com/swoole/ext-postgresql/archive/master.tar.gz -L && \
-    tar zxvf ./downloads/ext-postgresql.tar.gz && \
-    mv ext-postgresql* ext-postgresql && cd ext-postgresql && \
-    phpize && \
-    ./configure && \
-    make && make install && \
-    docker-php-ext-enable swoole_postgresql && \
-    : && \
-    rm -rf /tmp/*
-
 # PDFlib
 # https://www.pdflib.com/download/pdflib-product-family/
 RUN set -ex && \
