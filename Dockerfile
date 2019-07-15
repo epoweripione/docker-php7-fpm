@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7-fpm-stretch
 
 LABEL Maintainer="Ansley Leung" \
       Description="Latest PHP7 fpm Docker image. Use `docker-php-ext-install extension_name` to install Extensions." \
@@ -17,7 +17,7 @@ RUN set -ex && \
     apt-get upgrade -y && \
     apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev libicu-dev \
             libxml2-dev libxslt-dev libzip-dev libbz2-dev libpspell-dev aspell-en \
-            curl libcurl4 libcurl4-openssl-dev libssl-dev libc-client-dev libkrb5-dev \
+            curl libcurl3 libcurl4-openssl-dev libssl-dev libc-client-dev libkrb5-dev \
             libpcre3 libpcre3-dev libmagickwand-dev libmemcached-dev zlib1g-dev \
             libpq-dev nghttp2 libnghttp2-dev --no-install-recommends && \
     apt-get clean && apt-get autoclean && apt-get autoremove && \
